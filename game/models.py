@@ -24,18 +24,15 @@ class BaseModel(models.Model):
 
 
 class UserDetail(BaseModel):
-    user_id = models.UUIDField(db_index=True, default=uuid.uuid4, editable=False)
+    user_id = models.UUIDField(db_index=True, default=uuid.uuid4)
     user_name = models.CharField(max_length=200)
 
 
 class GameDetails(BaseModel):
     user = models.ForeignKey(
-        "UserDetail",
-        related_name="user_detail",
-        on_delete=models.PROTECT,
-        editable=False,
+        "UserDetail", related_name="user_detail", on_delete=models.PROTECT
     )
-    game_id = models.UUIDField(db_index=True, default=uuid.uuid4, editable=False)
+    game_id = models.UUIDField(db_index=True, default=uuid.uuid4)
     q1 = models.CharField(max_length=10, choices=game_constants.ALLOWED_CHOICES)
     q2 = models.CharField(max_length=10, choices=game_constants.ALLOWED_CHOICES)
     q3 = models.CharField(max_length=10, choices=game_constants.ALLOWED_CHOICES)
@@ -45,4 +42,8 @@ class GameDetails(BaseModel):
     q7 = models.CharField(max_length=10, choices=game_constants.ALLOWED_CHOICES)
     q8 = models.CharField(max_length=10, choices=game_constants.ALLOWED_CHOICES)
     q9 = models.CharField(max_length=10, choices=game_constants.ALLOWED_CHOICES)
-    winner = models.CharField(max_length=10, choices=game_constants.ALLOWED_WINNER)
+    winner = models.CharField(
+        max_length=10,
+        choices=game_constants.ALLOWED_WINNER,
+        default=game_constants.DRAW,
+    )
