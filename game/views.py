@@ -38,7 +38,31 @@ class GameViewSet(views.APIView):
             return crisscross_utils.create_response(serializer_instance.errors, 400)
 
         game_board = serializer_instance.validated_data.get("game_board")
-        if game_instance.winner:
+        is_winner = game_utils.is_game_over(game_instance)
+        if is_winner == game_constants.PLAYER1:
+            game_instance.winner = game_constants.PLAYER1
+            game_instance.save(update_fields=["winner"])
+            return crisscross_utils.create_response(
+                {
+                    "game_board": game_board,
+                    "winner": game_constants.PLAYER1,
+                    "result": "You lose!",
+                },
+                code=200,
+            )
+        elif is_winner == game_constants.PLAYER2:
+            game_instance.winner = game_constants.PLAYER2
+            game_instance.save(update_fields=["winner"])
+            return crisscross_utils.create_response(
+                {
+                    "game_board": game_board,
+                    "winner": game_constants.PLAYER2,
+                    "result": "You are Winner!",
+                },
+                code=200,
+            )
+
+        if game_instance.winner != game_constants.DRAW:
             return crisscross_utils.create_response(
                 {
                     "game_board": game_board,
