@@ -15,3 +15,28 @@ class UserViewSet(views.APIView):
         return crisscross_utils.create_response(
             {"user_id": user_instance.user_id}, code=200
         )
+
+
+class GameViewSet(views.APIView):
+    def post(self, request, user_id):
+        user_instance = game_models.UserDetail.objects.dfilter(user_id=user_id).last()
+        game_instance = game_models.GameDetails.objects.create(
+            user = user_instance
+        )
+        return crisscross_utils.create_response(
+        {"game_id":game_instance.game_id}, code=200
+        )
+
+
+    def put(self, request, game_id):
+        game_instance = game_models.GameDetails.objects.dfilter(game_id=game_id).last()
+        serializer_instance = game_serializer.GameSerializer(data=request.data)
+        if not serializer_instance.is_valid():
+            return crisscross_utils.create_response(serializer_instance.errors, 400)
+        
+        print(serializer_instance.validated_data.get('game_board'))
+
+        return crisscross_utils.create_response(
+        {"game_id":game_instance.game_id}, code=200
+        )
+
