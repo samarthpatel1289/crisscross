@@ -75,28 +75,30 @@ class GameViewSet(views.APIView):
                 code=200,
             )
 
-        best_move = minimax_function.bestmove(game_board)
-        game_board[best_move] = game_constants.PLAYER1
+        allowed_moves = []
+        i = 0
+        for game in game_board:
+            i = i + 1
+            if game == game_constants.NO_MOVE:
+                allowed_moves.append(i - 1)
 
-        # allowed_moves = []
-        # i = 0
-        # for game in game_board:
-        #     i = i + 1
-        #     if game == game_constants.NO_MOVE:
-        #         allowed_moves.append(i - 1)
-
-        # if allowed_moves:
-        #     random_move = game_utils.get_random_number(allowed_moves)
-        #     game_board[random_move] = game_constants.PLAYER1
-        # else:
-        #     return crisscross_utils.create_response(
-        #         {
-        #             "game_board": game_board,
-        #             "winner": game_constants.DRAW,
-        #             "result": "Draw Match",
-        #         },
-        #         code=200,
-        #     )
+        if len(allowed_moves) != 9:
+            if allowed_moves:
+                best_move = minimax_function.bestmove(game_board)
+                game_board[best_move] = game_constants.PLAYER1
+            else:
+                return crisscross_utils.create_response(
+                    {
+                        "game_board": game_board,
+                        "winner": game_constants.DRAW,
+                        "result": "Draw Match",
+                    },
+                    code=200,
+                )
+        else:
+            return crisscross_utils.create_response(
+                {"game_board": game_board}, code=200
+            )
 
         game_instance.q1 = game_board[0]
         game_instance.q2 = game_board[1]
