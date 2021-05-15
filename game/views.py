@@ -4,6 +4,7 @@ from crisscross import utils as crisscross_utils
 from game import models as game_models
 from game import constants as game_constants
 from game import utils as game_utils
+from game import minimax as minimax_function
 from django.http import Http404
 
 
@@ -74,25 +75,28 @@ class GameViewSet(views.APIView):
                 code=200,
             )
 
-        allowed_moves = []
-        i = 0
-        for game in game_board:
-            i = i + 1
-            if game == game_constants.NO_MOVE:
-                allowed_moves.append(i - 1)
+        best_move = minimax_function.bestmove(game_board)
+        game_board[best_move] = game_constants.PLAYER1
 
-        if allowed_moves:
-            random_move = game_utils.get_random_number(allowed_moves)
-            game_board[random_move] = game_constants.PLAYER1
-        else:
-            return crisscross_utils.create_response(
-                {
-                    "game_board": game_board,
-                    "winner": game_constants.DRAW,
-                    "result": "Draw Match",
-                },
-                code=200,
-            )
+        # allowed_moves = []
+        # i = 0
+        # for game in game_board:
+        #     i = i + 1
+        #     if game == game_constants.NO_MOVE:
+        #         allowed_moves.append(i - 1)
+
+        # if allowed_moves:
+        #     random_move = game_utils.get_random_number(allowed_moves)
+        #     game_board[random_move] = game_constants.PLAYER1
+        # else:
+        #     return crisscross_utils.create_response(
+        #         {
+        #             "game_board": game_board,
+        #             "winner": game_constants.DRAW,
+        #             "result": "Draw Match",
+        #         },
+        #         code=200,
+        #     )
 
         game_instance.q1 = game_board[0]
         game_instance.q2 = game_board[1]
