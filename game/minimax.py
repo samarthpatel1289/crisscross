@@ -84,7 +84,6 @@ def minimax(board, depth, isMax):
             if board[i] == "0":
                 # print(board[i])
                 board[i] = player
-                print(board)
 
                 best = max(minimax(board, depth + 1, False), best)
 
@@ -96,7 +95,6 @@ def minimax(board, depth, isMax):
             if board[i] == "0":
                 # print(board[i])
                 board[i] = opponent
-                print(board)
 
                 best = min(minimax(board, depth + 1, True), best)
 
@@ -114,20 +112,11 @@ def bestmove(board):
             move_value = minimax(board, 0, True)
 
             board[i] = "0"
-            print(i)
-            print(move_value)
             if move_value < best_value:
                 best_value = move_value
                 best_move = i
 
-    print("Best_move::", best_move)
-    print("Best Value::", best_value)
     return best_move
 
 
-# is_move(board)
 sys.setrecursionlimit(30000)
-print(sys.getrecursionlimit())
-# bestmove(board)
-
-# return Response(status=status.HTTP_200_OK)
